@@ -50,7 +50,7 @@ window.createQuestion = function(index) {
         <p>1. First, listen to the transformed audio:</p>
         <audio controls src="transformed/processed_audio_${audioFiles[index]}.wav"></audio>
         <p>2. Listen to the original audio:</p>
-        <audio controls src="origin/origin_${audioFiles[index]}.wav"></audio>
+        <audio controls src="original/origin_${audioFiles[index]}.wav"></audio>
         <p>3. Is the following audio is same with the transformed audio?</p>
         <audio controls src="${Math.random() < 0.5 ? 
             `transformed/processed_audio_${audioFiles[index]}.wav` : 
