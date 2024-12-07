@@ -1,23 +1,5 @@
-// Firebase Firestore 관련 import
 import { collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Firebase 설정
-const firebaseConfig = {
-    // Firebase 콘솔에서 가져온 설정값들
-    apiKey: "AIzaSyBEut0bKHQVqtgfZ0KXzuR5QBQxi2Och8w",
-    authDomain: "ee488-2f4d3.firebaseapp.com",
-    projectId: "ee488-2f4d3",
-    storageBucket: "ee488-2f4d3.firebasestorage.app",
-    messagingSenderId: "638150019577",
-    appId: "1:638150019577:web:85cf4936ec61aa05ab5528",
-    measurementId: "G-ZNHWC7151T"
-};
-
-// Firebase 초기화
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-// 사용자 정보 저장 변수
 let score = 0;
 let currentQuestion = 0;
 const totalQuestions = 10;
