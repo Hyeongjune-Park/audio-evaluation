@@ -1,3 +1,6 @@
+// Firebase Firestore 관련 import
+import { collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
 // Firebase 설정
 const firebaseConfig = {
     // Firebase 콘솔에서 가져온 설정값들
@@ -135,7 +138,7 @@ async function saveResults() {
     };
 
     try {
-        await db.collection('evaluationResults').add(results);
+        await addDoc(collection(window.db, 'evaluationResults'), results);
         console.log('Results saved successfully');
     } catch (error) {
         console.error('Error saving results:', error);
@@ -175,51 +178,31 @@ function startTest() {
 window.addEventListener('DOMContentLoaded', loadAudioFiles);
 
 // 전체 결과 조회 함수
-async function getAllResults() {
-    const snapshot = await db.collection('evaluationResults').get();
-    const results = [];
-    snapshot.forEach(doc => results.push(doc.data()));
-    return results;
-}
-
-// 화면 전환 함수들
-function showUserForm() {
-    document.getElementById('startMenu').style.display = 'none';
-    document.getElementById('userInfo').style.display = 'block';
-}
-
-function showAllResults() {
-    document.getElementById('startMenu').style.display = 'none';
-    document.getElementById('allResults').style.display = 'block';
-    loadAllResults();
-}
-
-function backToMenu() {
-    document.getElementById('startMenu').style.display = 'block';
-    document.getElementById('userInfo').style.display = 'none';
-    document.getElementById('allResults').style.display = 'none';
-    document.getElementById('questionContainer').style.display = 'none';
-    document.getElementById('result').innerHTML = '';
-}
-
-// 결과 조회 및 표시 함수
 async function loadAllResults() {
     try {
-        const snapshot = await db.collection('evaluationResults').get();
+        const resultsRef = collection(window.db, 'evaluationResults');
+        const q = query(resultsRef, orderBy('timestamp', 'desc'));
+        const snapshot = await getDocs(q);
+        
         const results = [];
         snapshot.forEach(doc => {
             const data = doc.data();
             results.push({
                 ...data,
-                timestamp: data.timestamp.toDate() // Firestore Timestamp를 Date 객체로 변환
+                timestamp: data.timestamp.toDate()
             });
         });
 
-        // 결과 정렬 (최신순)
-        results.sort((a, b) => b.timestamp - a.timestamp);
-
         // 평균 계산
         const totalResults = results.length;
+        if (totalResults === 0) {
+            document.getElementById('totalEvals').textContent = '0';
+            document.getElementById('avgPrecision').textContent = '0';
+            document.getElementById('avgRecall').textContent = '0';
+            document.getElementById('resultsBody').innerHTML = '<tr><td colspan="5">No results yet</td></tr>';
+            return;
+        }
+
         const avgPrecision = results.reduce((sum, r) => sum + parseFloat(r.precision), 0) / totalResults;
         const avgRecall = results.reduce((sum, r) => sum + parseFloat(r.recall), 0) / totalResults;
 
@@ -244,4 +227,24 @@ async function loadAllResults() {
         console.error('Error loading results:', error);
         alert('Error loading results. Please try again.');
     }
+}
+
+// 화면 전환 함수들
+function showUserForm() {
+    document.getElementById('startMenu').style.display = 'none';
+    document.getElementById('userInfo').style.display = 'block';
+}
+
+function showAllResults() {
+    document.getElementById('startMenu').style.display = 'none';
+    document.getElementById('allResults').style.display = 'block';
+    loadAllResults();
+}
+
+function backToMenu() {
+    document.getElementById('startMenu').style.display = 'block';
+    document.getElementById('userInfo').style.display = 'none';
+    document.getElementById('allResults').style.display = 'none';
+    document.getElementById('questionContainer').style.display = 'none';
+    document.getElementById('result').innerHTML = '';
 }

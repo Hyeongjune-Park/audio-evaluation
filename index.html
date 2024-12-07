@@ -3,8 +3,26 @@
 <head>
     <title>Audio Comparison Test</title>
     <link rel="stylesheet" href="design.css">
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBEut0bKHQVqtgfZ0KXzuR5QBQxi2Och8w",
+            authDomain: "ee488-2f4d3.firebaseapp.com",
+            projectId: "ee488-2f4d3",
+            storageBucket: "ee488-2f4d3.firebasestorage.app",
+            messagingSenderId: "638150019577",
+            appId: "1:638150019577:web:85cf4936ec61aa05ab5528",
+            measurementId: "G-ZNHWC7151T"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+    </script>
+    <script type="module" src="script.js"></script>
 </head>
 <body>
     <h1>Audio Comparison Test</h1>
@@ -48,7 +66,5 @@
 
     <div id="questionContainer" style="display: none;"></div>
     <div id="result"></div>
-
-    <script src="script.js"></script>
 </body>
 </html>
