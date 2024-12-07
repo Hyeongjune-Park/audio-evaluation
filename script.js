@@ -38,7 +38,7 @@ window.startEvaluation = function() {
 };
 
 window.loadAudioFiles = function() {
-    window.audioFiles = Array.from({length: 13}, (_, i) => i + 1);
+    window.audioFiles = Array.from({length: 10}, (_, i) => i + 1);
     window.startTest();
 };
 
