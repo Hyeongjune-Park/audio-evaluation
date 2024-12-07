@@ -156,7 +156,7 @@ function showFinalResult() {
 };
 
 // 전체 결과 조회 함수
-async function loadAllResults() {
+window.loadAllResults = async function() {
     try {
         const resultsRef = collection(window.db, 'evaluationResults');
         const q = query(resultsRef, orderBy('timestamp', 'desc'));
@@ -177,17 +177,29 @@ async function loadAllResults() {
             document.getElementById('totalEvals').textContent = '0';
             document.getElementById('avgPrecision').textContent = '0';
             document.getElementById('avgRecall').textContent = '0';
+            document.getElementById('avgTP').textContent = '0';
+            document.getElementById('avgTN').textContent = '0';
+            document.getElementById('avgFP').textContent = '0';
+            document.getElementById('avgFN').textContent = '0';
             document.getElementById('resultsBody').innerHTML = '<tr><td colspan="5">No results yet</td></tr>';
             return;
         }
 
         const avgPrecision = results.reduce((sum, r) => sum + parseFloat(r.precision), 0) / totalResults;
         const avgRecall = results.reduce((sum, r) => sum + parseFloat(r.recall), 0) / totalResults;
+        const avgTP = results.reduce((sum, r) => sum + r.truePositives, 0) / totalResults;
+        const avgTN = results.reduce((sum, r) => sum + r.trueNegatives, 0) / totalResults;
+        const avgFP = results.reduce((sum, r) => sum + r.falsePositives, 0) / totalResults;
+        const avgFN = results.reduce((sum, r) => sum + r.falseNegatives, 0) / totalResults;
 
         // 요약 정보 업데이트
         document.getElementById('totalEvals').textContent = totalResults;
         document.getElementById('avgPrecision').textContent = avgPrecision.toFixed(2);
         document.getElementById('avgRecall').textContent = avgRecall.toFixed(2);
+        document.getElementById('avgTP').textContent = avgTP.toFixed(2);
+        document.getElementById('avgTN').textContent = avgTN.toFixed(2);
+        document.getElementById('avgFP').textContent = avgFP.toFixed(2);
+        document.getElementById('avgFN').textContent = avgFN.toFixed(2);
 
         // 테이블 업데이트
         const tbody = document.getElementById('resultsBody');
@@ -195,6 +207,10 @@ async function loadAllResults() {
             <tr>
                 <td>${r.userName}</td>
                 <td>${r.score}/${r.totalQuestions}</td>
+                <td>${r.truePositives}</td>
+                <td>${r.trueNegatives}</td>
+                <td>${r.falsePositives}</td>
+                <td>${r.falseNegatives}</td>
                 <td>${r.precision}</td>
                 <td>${r.recall}</td>
                 <td>${r.timestamp.toLocaleDateString()} ${r.timestamp.toLocaleTimeString()}</td>

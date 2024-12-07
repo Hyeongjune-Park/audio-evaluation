@@ -43,15 +43,40 @@
     <div id="allResults" style="display: none;">
         <h2>All Evaluation Results</h2>
         <div class="results-summary">
-            <p>Total Evaluations: <span id="totalEvals">0</span></p>
-            <p>Average Precision: <span id="avgPrecision">0</span></p>
-            <p>Average Recall: <span id="avgRecall">0</span></p>
+            <h3>Average Metrics:</h3>
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <p>Total Evaluations: <span id="totalEvals">0</span></p>
+                </div>
+                <div class="metric-item">
+                    <p>Avg True Positives: <span id="avgTP">0</span></p>
+                </div>
+                <div class="metric-item">
+                    <p>Avg True Negatives: <span id="avgTN">0</span></p>
+                </div>
+                <div class="metric-item">
+                    <p>Avg False Positives: <span id="avgFP">0</span></p>
+                </div>
+                <div class="metric-item">
+                    <p>Avg False Negatives: <span id="avgFN">0</span></p>
+                </div>
+                <div class="metric-item">
+                    <p>Avg Precision: <span id="avgPrecision">0</span></p>
+                </div>
+                <div class="metric-item">
+                    <p>Avg Recall: <span id="avgRecall">0</span></p>
+                </div>
+            </div>
         </div>
         <table id="resultsTable">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Score</th>
+                    <th>TP</th>
+                    <th>TN</th>
+                    <th>FP</th>
+                    <th>FN</th>
                     <th>Precision</th>
                     <th>Recall</th>
                     <th>Date</th>
@@ -59,7 +84,7 @@
             </thead>
             <tbody id="resultsBody"></tbody>
         </table>
-        <button onclick="backToMenu()">Back to Menu</button>
+        <button onclick="window.backToMenu()">Back to Menu</button>
     </div>
 
     <div id="questionContainer" style="display: none;"></div>
