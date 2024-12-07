@@ -18,9 +18,6 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // 사용자 정보 저장 변수
-let userName = '';
-let userEmail = '';
-
 let score = 0;
 let currentQuestion = 0;
 const totalQuestions = 10;
@@ -108,13 +105,9 @@ function showNextQuestion() {
 }
 
 function startEvaluation() {
-    userName = document.getElementById('userName').value;
-    userEmail = document.getElementById('userEmail').value;
-    
-    if (!userName || !userEmail) {
-        alert('Please enter both name and email');
-        return;
-    }
+    // 사용자 정보는 선택적으로 저장
+    const userName = document.getElementById('userName').value || 'Anonymous';
+    const userEmail = document.getElementById('userEmail').value || 'anonymous@example.com';
     
     document.getElementById('userInfo').style.display = 'none';
     document.getElementById('questionContainer').style.display = 'block';
@@ -124,8 +117,8 @@ function startEvaluation() {
 async function saveResults() {
     const metrics = calculateMetrics();
     const results = {
-        userName: userName,
-        userEmail: userEmail,
+        userName: document.getElementById('userName').value || 'Anonymous',
+        userEmail: document.getElementById('userEmail').value || 'anonymous@example.com',
         timestamp: new Date(),
         score: score,
         totalQuestions: totalQuestions,
