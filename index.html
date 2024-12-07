@@ -18,9 +18,7 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        window.db = db;
+        window.db = getFirestore(app);
     </script>
     <script type="module" src="script.js"></script>
 </head>
@@ -29,8 +27,8 @@
     
     <!-- 시작 메뉴 -->
     <div id="startMenu" class="start-menu">
-        <button onclick="showUserForm()">Start New Evaluation</button>
-        <button onclick="showAllResults()">View All Results</button>
+        <button onclick="window.showUserForm()">Start New Evaluation</button>
+        <button onclick="window.showAllResults()">View All Results</button>
     </div>
 
     <!-- 사용자 정보 입력 폼 -->

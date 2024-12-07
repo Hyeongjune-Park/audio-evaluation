@@ -1,34 +1,27 @@
 import { collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-let score = 0;
-let currentQuestion = 0;
-const totalQuestions = 10;
+// Firebase 초기화 관련 코드 제거 (index.html로 이동)
 
-// Confusion Matrix values
-let truePositives = 0;  // Correctly predicted transformed audio as transformed
-let trueNegatives = 0;  // Correctly predicted generated audio as generated
-let falsePositives = 0; // Incorrectly predicted generated audio as transformed
-let falseNegatives = 0; // Incorrectly predicte
+// 변수들을 window 객체에 할당
+window.score = 0;
+window.currentQuestion = 0;
+window.totalQuestions = 10;
+window.truePositives = 0;
+window.trueNegatives = 0;
+window.falsePositives = 0;
+window.falseNegatives = 0;
 
-// Audio file path settings
-const originalAudioPath = './origin/';
-const transformedAudioPath = './transformed/';
-const generatedAudioPath = './generated/';
-const length = 13;
-
-// Audio file list
-let audioFiles = [];
-
+// 함수들을 window 객체에 할당
 window.showUserForm = function() {
     document.getElementById('startMenu').style.display = 'none';
     document.getElementById('userInfo').style.display = 'block';
-}
+};
 
-window.showAllResults = function() {
+window.showAllResults = async function() {
     document.getElementById('startMenu').style.display = 'none';
     document.getElementById('allResults').style.display = 'block';
-    loadAllResults();
-}
+    await loadAllResults();
+};
 
 window.backToMenu = function() {
     document.getElementById('startMenu').style.display = 'block';
@@ -36,18 +29,18 @@ window.backToMenu = function() {
     document.getElementById('allResults').style.display = 'none';
     document.getElementById('questionContainer').style.display = 'none';
     document.getElementById('result').innerHTML = '';
-}
+};
 
 window.startEvaluation = function() {
     document.getElementById('userInfo').style.display = 'none';
     document.getElementById('questionContainer').style.display = 'block';
-    loadAudioFiles();
-}
+    window.loadAudioFiles();
+};
 
 window.loadAudioFiles = function() {
-    window.audioFiles = Array.from({length: 20}, (_, i) => i + 1);
+    window.audioFiles = Array.from({length: 13}, (_, i) => i + 1);
     window.startTest();
-}
+};
 
 window.createQuestion = function(index) {
     const questionDiv = document.createElement('div');
@@ -67,7 +60,7 @@ window.createQuestion = function(index) {
         <button onclick="window.checkAnswer(${index}, false)">This is generated audio</button>
     `;
     return questionDiv;
-}
+};
 
 window.checkAnswer = function(questionIndex, userAnswer) {
     const isTransformed = document.querySelector('.question audio:last-of-type').src.includes('processed_audio');
@@ -92,18 +85,18 @@ window.checkAnswer = function(questionIndex, userAnswer) {
     } else {
         showFinalResult();
     }
-}
+};
 
 window.showNextQuestion = function() {
     const container = document.getElementById('questionContainer');
     container.innerHTML = '';
     container.appendChild(createQuestion(currentQuestion));
-}
+};
 
 window.startTest = function() {
     audioFiles = audioFiles.sort(() => Math.random() - 0.5).slice(0, totalQuestions);
     showNextQuestion();
-}
+};
 
 function calculateMetrics() {
     const precision = truePositives / (truePositives + falsePositives) || 0;
@@ -113,7 +106,7 @@ function calculateMetrics() {
         precision: precision.toFixed(2),
         recall: recall.toFixed(2)
     };
-}
+};
 
 async function saveResults() {
     const metrics = calculateMetrics();
@@ -137,7 +130,7 @@ async function saveResults() {
     } catch (error) {
         console.error('Error saving results:', error);
     }
-}
+};
 
 function showFinalResult() {
     const container = document.getElementById('questionContainer');
@@ -160,7 +153,7 @@ function showFinalResult() {
 
     // 결과 저장
     saveResults();
-}
+};
 
 // 전체 결과 조회 함수
 async function loadAllResults() {
@@ -212,4 +205,9 @@ async function loadAllResults() {
         console.error('Error loading results:', error);
         alert('Error loading results. Please try again.');
     }
-}
+};
+
+// 페이지 로드 시 함수들을 전역으로 등록
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('Functions registered globally');
+});
