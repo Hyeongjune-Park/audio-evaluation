@@ -19,35 +19,59 @@ const length = 13;
 // Audio file list
 let audioFiles = [];
 
-function loadAudioFiles() {
-    audioFiles = Array.from({length}, (_, i) => i + 1);
-    startTest();
+window.showUserForm = function() {
+    document.getElementById('startMenu').style.display = 'none';
+    document.getElementById('userInfo').style.display = 'block';
 }
 
-function createQuestion(index) {
+window.showAllResults = function() {
+    document.getElementById('startMenu').style.display = 'none';
+    document.getElementById('allResults').style.display = 'block';
+    loadAllResults();
+}
+
+window.backToMenu = function() {
+    document.getElementById('startMenu').style.display = 'block';
+    document.getElementById('userInfo').style.display = 'none';
+    document.getElementById('allResults').style.display = 'none';
+    document.getElementById('questionContainer').style.display = 'none';
+    document.getElementById('result').innerHTML = '';
+}
+
+window.startEvaluation = function() {
+    document.getElementById('userInfo').style.display = 'none';
+    document.getElementById('questionContainer').style.display = 'block';
+    loadAudioFiles();
+}
+
+window.loadAudioFiles = function() {
+    window.audioFiles = Array.from({length: 20}, (_, i) => i + 1);
+    window.startTest();
+}
+
+window.createQuestion = function(index) {
     const questionDiv = document.createElement('div');
     questionDiv.className = 'question';
     questionDiv.innerHTML = `
         <h3>Question ${index + 1}</h3>
-        <p>1. First, listen the transformed audio:</p>
-        <audio controls src="${transformedAudioPath}processed_audio_${audioFiles[index]}.wav"></audio>
-        <p>2. Then, listen the original audio:</p>
-        <audio controls src="${originalAudioPath}origin_${audioFiles[index]}.wav"></audio>
-        <p>3. Is this audio is same with the first transformed audio?</p>
+        <p>1. First, listen to the transformed audio:</p>
+        <audio controls src="transformed/processed_audio_${audioFiles[index]}.wav"></audio>
+        <p>2. Listen to the original audio:</p>
+        <audio controls src="original/origin_${audioFiles[index]}.wav"></audio>
+        <p>3. Is the following audio transformed?</p>
         <audio controls src="${Math.random() < 0.5 ? 
-            `${transformedAudioPath}processed_audio_${audioFiles[index]}.wav` : 
-            `${generatedAudioPath}generated_${audioFiles[index]}.wav`}"></audio>
+            `transformed/processed_audio_${audioFiles[index]}.wav` : 
+            `generated/generated_${audioFiles[index]}.wav`}"></audio>
         <br>
-        <button onclick="checkAnswer(${index}, true)">True</button>
-        <button onclick="checkAnswer(${index}, false)">False</button>
+        <button onclick="window.checkAnswer(${index}, true)">This is transformed audio</button>
+        <button onclick="window.checkAnswer(${index}, false)">This is generated audio</button>
     `;
     return questionDiv;
 }
 
-function checkAnswer(questionIndex, userAnswer) {
+window.checkAnswer = function(questionIndex, userAnswer) {
     const isTransformed = document.querySelector('.question audio:last-of-type').src.includes('processed_audio');
     
-    // Calculate confusion matrix values
     if (isTransformed && userAnswer) {
         truePositives++;
     } else if (!isTransformed && !userAnswer) {
@@ -70,6 +94,17 @@ function checkAnswer(questionIndex, userAnswer) {
     }
 }
 
+window.showNextQuestion = function() {
+    const container = document.getElementById('questionContainer');
+    container.innerHTML = '';
+    container.appendChild(createQuestion(currentQuestion));
+}
+
+window.startTest = function() {
+    audioFiles = audioFiles.sort(() => Math.random() - 0.5).slice(0, totalQuestions);
+    showNextQuestion();
+}
+
 function calculateMetrics() {
     const precision = truePositives / (truePositives + falsePositives) || 0;
     const recall = truePositives / (truePositives + falseNegatives) || 0;
@@ -78,22 +113,6 @@ function calculateMetrics() {
         precision: precision.toFixed(2),
         recall: recall.toFixed(2)
     };
-}
-
-function showNextQuestion() {
-    const container = document.getElementById('questionContainer');
-    container.innerHTML = '';
-    container.appendChild(createQuestion(currentQuestion));
-}
-
-function startEvaluation() {
-    // 사용자 정보는 선택적으로 저장
-    const userName = document.getElementById('userName').value || 'Anonymous';
-    const userEmail = document.getElementById('userEmail').value || 'anonymous@example.com';
-    
-    document.getElementById('userInfo').style.display = 'none';
-    document.getElementById('questionContainer').style.display = 'block';
-    loadAudioFiles();
 }
 
 async function saveResults() {
@@ -142,15 +161,6 @@ function showFinalResult() {
     // 결과 저장
     saveResults();
 }
-
-function startTest() {
-    // Randomly select audio files
-    audioFiles = audioFiles.sort(() => Math.random() - 0.5).slice(0, totalQuestions);
-    showNextQuestion();
-}
-
-// Start test when page loads
-window.addEventListener('DOMContentLoaded', loadAudioFiles);
 
 // 전체 결과 조회 함수
 async function loadAllResults() {
@@ -202,24 +212,4 @@ async function loadAllResults() {
         console.error('Error loading results:', error);
         alert('Error loading results. Please try again.');
     }
-}
-
-// 화면 전환 함수들
-function showUserForm() {
-    document.getElementById('startMenu').style.display = 'none';
-    document.getElementById('userInfo').style.display = 'block';
-}
-
-function showAllResults() {
-    document.getElementById('startMenu').style.display = 'none';
-    document.getElementById('allResults').style.display = 'block';
-    loadAllResults();
-}
-
-function backToMenu() {
-    document.getElementById('startMenu').style.display = 'block';
-    document.getElementById('userInfo').style.display = 'none';
-    document.getElementById('allResults').style.display = 'none';
-    document.getElementById('questionContainer').style.display = 'none';
-    document.getElementById('result').innerHTML = '';
 }
