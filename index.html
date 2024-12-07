@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio Comparison Test</title>
+    <link rel="stylesheet" href="design.css">
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore.js"></script>
+</head>
+<body>
+    <h1>Audio Comparison Test</h1>
+    
+    <!-- 시작 메뉴 -->
+    <div id="startMenu" class="start-menu">
+        <button onclick="showUserForm()">Start New Evaluation</button>
+        <button onclick="showAllResults()">View All Results</button>
+    </div>
+
+    <!-- 사용자 정보 입력 폼 -->
+    <div id="userInfo" class="user-info" style="display: none;">
+        <input type="text" id="userName" placeholder="Enter your name">
+        <input type="email" id="userEmail" placeholder="Enter your email">
+        <button onclick="startEvaluation()">Start Evaluation</button>
+        <button onclick="backToMenu()">Back to Menu</button>
+    </div>
+
+    <!-- 전체 결과 표시 영역 -->
+    <div id="allResults" style="display: none;">
+        <h2>All Evaluation Results</h2>
+        <div class="results-summary">
+            <p>Total Evaluations: <span id="totalEvals">0</span></p>
+            <p>Average Precision: <span id="avgPrecision">0</span></p>
+            <p>Average Recall: <span id="avgRecall">0</span></p>
+        </div>
+        <table id="resultsTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Score</th>
+                    <th>Precision</th>
+                    <th>Recall</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+        </table>
+        <button onclick="backToMenu()">Back to Menu</button>
+    </div>
+
+    <div id="questionContainer" style="display: none;"></div>
+    <div id="result"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
