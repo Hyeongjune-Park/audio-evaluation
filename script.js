@@ -50,14 +50,14 @@ window.createQuestion = function(index) {
         <p>1. First, listen to the transformed audio:</p>
         <audio controls src="transformed/processed_audio_${audioFiles[index]}.wav"></audio>
         <p>2. Listen to the original audio:</p>
-        <audio controls src="original/origin_${audioFiles[index]}.wav"></audio>
-        <p>3. Is the following audio transformed?</p>
+        <audio controls src="origin/origin_${audioFiles[index]}.wav"></audio>
+        <p>3. Is the following audio is same with the transformed audio?</p>
         <audio controls src="${Math.random() < 0.5 ? 
             `transformed/processed_audio_${audioFiles[index]}.wav` : 
             `generated/generated_${audioFiles[index]}.wav`}"></audio>
         <br>
-        <button onclick="window.checkAnswer(${index}, true)">This is transformed audio</button>
-        <button onclick="window.checkAnswer(${index}, false)">This is generated audio</button>
+        <button onclick="window.checkAnswer(${index}, true)">True</button>
+        <button onclick="window.checkAnswer(${index}, false)">False</button>
     `;
     return questionDiv;
 };
